@@ -1,5 +1,7 @@
 module github.com/andviro/grayproxy
 
+go 1.16
+
 require (
 	github.com/andviro/goldie v0.0.0-20180822203610-4d8717fa0de8
 	github.com/armon/go-proxyproto v0.0.0-20180202201750-5b7edb60ff5f
@@ -24,6 +26,7 @@ require (
 	github.com/pkg/errors v0.8.0
 	github.com/prometheus/common v0.2.0
 	github.com/prometheus/prometheus v2.5.0+incompatible // indirect
+	github.com/rabbitmq/amqp091-go v0.0.0-20210714180937-de74e8a7d0e0
 	github.com/sercand/kuberesolver v2.1.0+incompatible // indirect
 	github.com/uber-go/atomic v1.3.2 // indirect
 	github.com/uber/jaeger-client-go v2.15.1-0.20190228190846-ecf2d03a9e80+incompatible // indirect

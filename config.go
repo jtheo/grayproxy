@@ -6,6 +6,7 @@ import (
 	"os"
 	"strings"
 
+	"github.com/andviro/grayproxy/pkg/apqm"
 	"github.com/andviro/grayproxy/pkg/disk"
 	"github.com/andviro/grayproxy/pkg/dummy"
 	"github.com/andviro/grayproxy/pkg/http"
@@ -98,6 +99,8 @@ func (app *app) configure() error {
 				break
 			}
 			app.outs = append(app.outs, wss)
+		case strings.HasPrefix(v, "apqm://") || strings.HasPrefix(v, "amqps://"):
+			app.outs = append(app.outs, &apqm.Sender{Address: v})
 		default:
 			app.outs = append(app.outs, &tcp.Sender{Address: strings.TrimPrefix(v, "tcp://"), SendTimeout: app.sendTimeout})
 		}
