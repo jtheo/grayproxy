@@ -82,7 +82,7 @@ func (app *app) configure() error {
 		log.Printf("adding output %d: %s", i, v)
 		switch {
 		case strings.HasPrefix(v, "http://") || strings.HasPrefix(v, "https://"):
-			if strings.HasSuffix(v, "/api/prom/push") {
+			if strings.HasSuffix(v, "/loki/api/v1/push") {
 				ls, err := loki.New(v)
 				if err != nil {
 					log.Println("could not create loki output: ", err.Error())
@@ -99,7 +99,7 @@ func (app *app) configure() error {
 				break
 			}
 			app.outs = append(app.outs, wss)
-		case strings.HasPrefix(v, "apqm://") || strings.HasPrefix(v, "amqps://"):
+		case strings.HasPrefix(v, "amqp://") || strings.HasPrefix(v, "amqps://"):
 			app.outs = append(app.outs, &apqm.Sender{Address: v})
 		default:
 			app.outs = append(app.outs, &tcp.Sender{Address: strings.TrimPrefix(v, "tcp://"), SendTimeout: app.sendTimeout})

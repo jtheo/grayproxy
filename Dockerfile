@@ -1,4 +1,4 @@
-FROM golang:1.12-alpine as builder
+FROM golang:1.16-alpine as builder
 RUN apk update && apk add --no-cache git ca-certificates tzdata && update-ca-certificates
 WORKDIR /app
 COPY . .
@@ -10,4 +10,4 @@ COPY --from=builder /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/
 COPY --from=builder /app/grayproxy /grayproxy
 EXPOSE 12201/udp
 ENTRYPOINT ["/grayproxy"]
-CMD ["-in", "tcp://:12201", "-v", "-out", "http://loki:3100/api/prom/push"]
+CMD ["-in", "tcp://localhost:12201"]
