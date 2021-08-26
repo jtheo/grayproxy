@@ -1,6 +1,7 @@
 package tcp
 
 import (
+	"log"
 	"net"
 	"time"
 
@@ -20,7 +21,10 @@ func (s *Sender) write(data []byte) {
 	}
 	defer func() {
 		if s.err != nil && s.conn != nil {
-			s.conn.Close()
+			err := s.conn.Close()
+			if err != nil {
+				log.Printf("Error closing sender %v connection: %v\n", s, err)
+			}
 			s.conn = nil
 		}
 	}()
@@ -42,7 +46,10 @@ func (s *Sender) Send(data []byte) (err error) {
 			return s.err
 		}
 	}
-	s.conn.SetDeadline(time.Now().Add(time.Duration(s.SendTimeout) * time.Millisecond))
+	err = s.conn.SetDeadline(time.Now().Add(time.Duration(s.SendTimeout) * time.Millisecond))
+	if err != nil {
+		log.Printf("Error SetDeadLine: %v\n", err)
+	}
 	s.write(data)
 	s.write([]byte{0})
 	return s.err

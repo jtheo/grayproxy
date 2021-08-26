@@ -56,7 +56,7 @@ func (s *Sender) Send(data []byte) (err error) {
 	var msg string
 	ls := s.labelSet()
 	ts := time.Now()
-	jsonparser.ObjectEach(data, func(key []byte, value []byte, dataType jsonparser.ValueType, offset int) error {
+	err = jsonparser.ObjectEach(data, func(key []byte, value []byte, dataType jsonparser.ValueType, offset int) error {
 		switch k := strings.TrimPrefix(string(key), "_"); k {
 		case "timestamp":
 			ms, _ := jsonparser.ParseFloat(value)
@@ -74,6 +74,10 @@ func (s *Sender) Send(data []byte) (err error) {
 		}
 		return nil
 	})
+
+	if err != nil {
+		return err
+	}
 	if ts.IsZero() {
 		ts = time.Now()
 	}
