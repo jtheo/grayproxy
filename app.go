@@ -14,18 +14,27 @@ import (
 
 var (
 	inMessages = promauto.NewCounter(prometheus.CounterOpts{
-		Name: "in_total_messages",
-		Help: "The total number of incoming messages",
+		Namespace: "grayproxy",
+		Name:      "in_total_messages",
+		Help:      "The total number of incoming messages",
 	})
 
 	outMessages = promauto.NewCounter(prometheus.CounterOpts{
-		Name: "out_total_messages",
-		Help: "The total number of outcoming messages",
+		Namespace: "grayproxy",
+		Name:      "out_total_messages",
+		Help:      "The total number of outcoming messages",
 	})
 
 	errorsMessages = promauto.NewCounter(prometheus.CounterOpts{
-		Name: "total_errors",
-		Help: "The total number of errors",
+		Namespace: "grayproxy",
+		Name:      "total_errors",
+		Help:      "The total number of errors",
+	})
+
+	latency = promauto.NewHistogram(prometheus.HistogramOpts{
+		Namespace: "grayproxy",
+		Name:      "out_latency",
+		Help:      "The total number of errors",
 	})
 )
 
@@ -68,6 +77,10 @@ func (app *app) enqueue(msgs <-chan gelf.Chunk) {
 
 func (app *app) dequeue() {
 	for msg := range app.q.ReadChan() {
+		timer := prometheus.NewTimer(prometheus.ObserverFunc(func(v float64) {
+			latency.Observe(v)
+		}))
+
 		// var sent bool
 		if app.verbose {
 			log.Println(string(msg))
@@ -84,6 +97,7 @@ func (app *app) dequeue() {
 				}
 				continue
 			}
+			outMessages.Inc()
 			if app.sendErrors[i] != nil {
 				log.Printf("out %d is now alive", i)
 				app.sendErrors[i] = nil
@@ -92,7 +106,6 @@ func (app *app) dequeue() {
 			// break
 			counter++
 		}
-
 		if counter != len(app.outs) {
 			// 	sent = true
 			// }
@@ -104,6 +117,7 @@ func (app *app) dequeue() {
 				panic(err)
 			}
 		}
+		timer.ObserveDuration()
 		outMessages.Inc()
 	}
 }
@@ -129,6 +143,7 @@ func (app *app) run() (err error) {
 	go app.enqueue(msgs)
 	go app.dequeue()
 	log.Printf("starting grayproxy")
+
 	if app.metricsOn {
 		port := 9112
 		promAddr := "0.0.0.0:" + strconv.Itoa(port)

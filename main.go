@@ -2,9 +2,8 @@ package main
 
 import (
 	"log"
+	_ "net/http/pprof"
 )
-
-var version string
 
 func main() {
 	app := new(app)
