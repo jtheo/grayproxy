@@ -1,6 +1,8 @@
 package apqm
 
 import (
+	"log"
+
 	amqp "github.com/rabbitmq/amqp091-go"
 )
 
@@ -11,12 +13,14 @@ type Sender struct {
 func (s *Sender) Send(data []byte) (err error) {
 	conn, err := amqp.Dial(s.Address)
 	if err != nil {
+		log.Printf("Error opening connection with AMQP Server %s: %v\n", s.Address, err)
 		return err
 	}
 	defer conn.Close()
 
 	ch, err := conn.Channel()
 	if err != nil {
+		log.Printf("Error in connecting to channel %v\n", err)
 		return err
 	}
 	defer ch.Close()
@@ -30,6 +34,7 @@ func (s *Sender) Send(data []byte) (err error) {
 		nil,            // arguments
 	)
 	if err != nil {
+		log.Printf("Error declaring Queue %v\n", err)
 		return err
 	}
 
@@ -43,6 +48,7 @@ func (s *Sender) Send(data []byte) (err error) {
 			Body:        []byte(data),
 		})
 	if err != nil {
+		log.Printf("Error publishing to Queue %v\n", err)
 		return err
 	}
 	return nil

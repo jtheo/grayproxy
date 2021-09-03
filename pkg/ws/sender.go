@@ -25,7 +25,7 @@ func (l *wsListener) close(msg string) {
 	if err != nil {
 		log.Printf("WriteMessage error: %v\n", err)
 	}
-	time.Sleep(2)
+	time.Sleep(10 * time.Millisecond)
 	err = l.c.Close()
 	if err != nil {
 		log.Printf("")
@@ -181,7 +181,7 @@ func (s *Sender) Send(data []byte) (err error) {
 	}
 
 	if len(s.clients) > 0 {
-		for l, _ := range s.clients {
+		for l := range s.clients {
 			if m.isSendable(l.filter) {
 				err := l.c.WriteMessage(1, m.json)
 				if err != nil {
