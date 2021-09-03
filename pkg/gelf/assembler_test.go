@@ -24,7 +24,7 @@ func TestAssembling(t *testing.T) {
 	if ok := a.Update(AssemblerTestCases[2]); !ok {
 		t.Fatal("Assembly should complete")
 	}
-	if c := a.Bytes(); bytes.Compare(c, []byte{1, 2, 3}) != 0 {
+	if c := a.Bytes(); !bytes.Equal(c, []byte{1, 2, 3}) {
 		t.Fatalf("Invalid assembly: %v", c)
 	}
 }

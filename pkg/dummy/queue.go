@@ -2,16 +2,14 @@ package dummy
 
 import (
 	"errors"
-	"sync"
 	"time"
 )
 
 var Timeout = 10 * time.Second
 
 type Queue struct {
-	in   chan []byte
-	out  chan []byte
-	once sync.Once
+	in  chan []byte
+	out chan []byte
 }
 
 func New() *Queue {

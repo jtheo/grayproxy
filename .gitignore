@@ -2,3 +2,7 @@ gp
 grayproxy.*
 grayproxy
 data
+gp*
+*.prof
+*.pprof
+*.obj

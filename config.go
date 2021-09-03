@@ -6,7 +6,7 @@ import (
 	"os"
 	"strings"
 
-	"github.com/andviro/grayproxy/pkg/apqm"
+	apqm "github.com/andviro/grayproxy/pkg/amqp"
 	"github.com/andviro/grayproxy/pkg/disk"
 	"github.com/andviro/grayproxy/pkg/dummy"
 	"github.com/andviro/grayproxy/pkg/http"
@@ -62,6 +62,8 @@ func (app *app) configure() error {
 	fs.BoolVar(&app.verbose, "v", false, "echo received logs on console")
 	fs.IntVar(&app.sendTimeout, "sendTimeout", 1000, "maximum TCP or HTTP output timeout (ms)")
 	fs.StringVar(&app.dataDir, "dataDir", "", "buffer directory (defaults to no buffering)")
+	fs.BoolVar(&app.metricsOn, "enable-metrics", false, "Enable Prometheus Metrics, disable by default")
+
 	if err := fs.Parse(os.Args[1:]); err != nil {
 		return errors.Wrap(err, "parsing command-line")
 	}
@@ -121,4 +123,5 @@ func (app *app) configure() error {
 	q, err := disk.New(app.dataDir, diskFileSize)
 	app.q = q
 	return err
+
 }

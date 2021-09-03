@@ -21,9 +21,15 @@ type wsListener struct {
 }
 
 func (l *wsListener) close(msg string) {
-	l.c.WriteMessage(websocket.CloseMessage, websocket.FormatCloseMessage(websocket.CloseNormalClosure, msg))
-	time.Sleep(2)
-	l.c.Close()
+	err := l.c.WriteMessage(websocket.CloseMessage, websocket.FormatCloseMessage(websocket.CloseNormalClosure, msg))
+	if err != nil {
+		log.Printf("WriteMessage error: %v\n", err)
+	}
+	time.Sleep(10 * time.Millisecond)
+	err = l.c.Close()
+	if err != nil {
+		log.Printf("")
+	}
 }
 
 type Sender struct {
@@ -175,10 +181,12 @@ func (s *Sender) Send(data []byte) (err error) {
 	}
 
 	if len(s.clients) > 0 {
-		for l, _ := range s.clients {
+		for l := range s.clients {
 			if m.isSendable(l.filter) {
-				// log.Print("Sender sending: ", string(m.json))
-				l.c.WriteMessage(1, m.json)
+				err := l.c.WriteMessage(1, m.json)
+				if err != nil {
+					log.Printf("WriteMessage error: %v\n", err)
+				}
 			}
 		}
 	}

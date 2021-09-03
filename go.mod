@@ -24,15 +24,14 @@ require (
 	github.com/opentracing-contrib/go-stdlib v0.0.0-20190205184154-464eb271c715 // indirect
 	github.com/opentracing/opentracing-go v1.0.2 // indirect
 	github.com/pkg/errors v0.8.0
+	github.com/prometheus/client_golang v0.9.1
 	github.com/prometheus/common v0.2.0
 	github.com/prometheus/prometheus v2.5.0+incompatible // indirect
 	github.com/rabbitmq/amqp091-go v0.0.0-20210714180937-de74e8a7d0e0
 	github.com/sercand/kuberesolver v2.1.0+incompatible // indirect
-	github.com/uber-go/atomic v1.3.2 // indirect
 	github.com/uber/jaeger-client-go v2.15.1-0.20190228190846-ecf2d03a9e80+incompatible // indirect
 	github.com/uber/jaeger-lib v2.0.0+incompatible // indirect
 	github.com/weaveworks/common v0.0.0-20190110153500-81a1a4d158e6 // indirect
 	github.com/weaveworks/promrus v1.2.0 // indirect
-	go.uber.org/atomic v1.3.2 // indirect
 	google.golang.org/grpc v1.19.0 // indirect
 )
